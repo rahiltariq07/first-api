@@ -1,2 +1,2 @@
 # first-api
-Creating first Api.
+Creating first API.
