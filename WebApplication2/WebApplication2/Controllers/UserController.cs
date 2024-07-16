@@ -23,12 +23,26 @@ namespace WebApplication2.Controllers
             var user = users.FirstOrDefault(x => x.Id == id);
             return user;
         }
-
-        // POST api/<UserController>
         [HttpPost]
-        public void Post([FromBody] User request)
+        [ProducesResponseType(typeof(User), 201)]
+        [ProducesResponseType(typeof(Error), 400)]
+        public IActionResult Post([FromBody] UserRequest request)
         {
-            users.Add(request);
+            if (string.IsNullOrEmpty(request.Name))
+            {
+                Error error = new Error();
+                error.Message = "The Name field is required";
+                return BadRequest(error);
+            }
+            User user = new User();
+            user.Email = request.Email;
+            user.Name = request.Name;
+            user.Job = request.Job;
+            user.Id = users.Count() + 1;
+
+            users.Add(user);
+
+           return CreatedAtAction("Get", new {id = user.Id}, user);
         }
 
         // PUT api/<UserController>/5
